@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import CommandHeader from "./CommandHeader";
-import MapView from "./MapView";
+import RealMapView from "./RealMapView";
 import DispatchPanel from "./DispatchPanel";
 import StatusDashboard from "./StatusDashboard";
 import CommunicationHub from "./CommunicationHub";
+import AnalyticsDashboard from "./AnalyticsDashboard";
 
 interface HomeProps {
   isDarkMode?: boolean;
@@ -18,10 +19,13 @@ const Home = ({ isDarkMode = true, onThemeToggle = () => {} }: HomeProps) => {
       <CommandHeader isDarkMode={isDarkMode} onThemeToggle={onThemeToggle} />
 
       <main className="container mx-auto p-4 space-y-4">
-        <StatusDashboard />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <AnalyticsDashboard />
+          <StatusDashboard />
+        </div>
 
         <div className="flex gap-4 flex-wrap lg:flex-nowrap justify-center lg:justify-between">
-          <MapView
+          <RealMapView
             onMarkerClick={(location) => {
               setSelectedIncident(location);
             }}

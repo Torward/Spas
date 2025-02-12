@@ -7,7 +7,14 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "./ui/tooltip";
-import { MapPin, Navigation, AlertTriangle, User } from "lucide-react";
+import {
+  MapPin,
+  Navigation,
+  AlertTriangle,
+  User,
+  FileText,
+} from "lucide-react";
+import EventDetailsDialog from "./EventDetailsDialog";
 
 interface Location {
   id: string;
@@ -155,6 +162,13 @@ const MapView: React.FC<MapViewProps> = ({
               Location: {selectedLocation.position.lat.toFixed(4)},{" "}
               {selectedLocation.position.lng.toFixed(4)}
             </p>
+            <div className="mt-2">
+              <EventDetailsDialog
+                emergencyId={selectedLocation.id}
+                latitude={selectedLocation.position.lat}
+                longitude={selectedLocation.position.lng}
+              />
+            </div>
           </div>
         </div>
       )}
