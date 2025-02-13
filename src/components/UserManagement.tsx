@@ -113,12 +113,14 @@ const UserManagement = () => {
                     onClick={() =>
                       handleRoleChange(
                         user.id,
-                        user.role === "dispatcher" ? "responder" : "dispatcher",
+                        user.role === "dispatcher"
+                          ? "duty_officer"
+                          : "dispatcher",
                       )
                     }
                   >
                     {user.role === "dispatcher"
-                      ? "Сделать респондером"
+                      ? "Сделать оперативным дежурным"
                       : "Сделать диспетчером"}
                   </Button>
                 </TableCell>

@@ -6,6 +6,9 @@ interface AuthContextType {
   profile: any;
   isDispatcher: boolean;
   signIn: (email: string, password: string) => Promise<void>;
+  signInWithVK: () => Promise<void>;
+  signInWithYandex: () => Promise<void>;
+  signInWithGosuslugi: () => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -62,6 +65,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (error) throw error;
   };
 
+  const signInWithVK = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'vk',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (error) throw error;
+  };
+
+  const signInWithYandex = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'yandex',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (error) throw error;
+  };
+
+  const signInWithGosuslugi = async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'gosuslugi',
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
+    if (error) throw error;
+  };
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) throw error;
+  };
+
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
@@ -73,6 +113,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     isDispatcher,
     signIn,
     signOut,
+    signInWithVK,
+    signInWithYandex,
+    signInWithGosuslugi,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

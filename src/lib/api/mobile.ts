@@ -204,6 +204,7 @@ export class MobileAPI {
         p_user_id: user.user?.id,
         p_device_id: Math.random().toString(36).slice(-8),
         p_device_type: "victim",
+        role: "victim",
       },
     );
 
@@ -233,6 +234,7 @@ export class MobileAPI {
         p_user_id: user.user?.id,
         p_device_id: Math.random().toString(36).slice(-8),
         p_device_type: "responder",
+        role: "responder",
       },
     );
 

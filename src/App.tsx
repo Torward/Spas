@@ -4,6 +4,8 @@ import { AuthProvider } from "./lib/auth";
 import { Toaster } from "./components/ui/toaster";
 import Home from "./components/home";
 import LoginPage from "./routes/login";
+import RegisterPage from "./routes/register";
+import AuthCallback from "./routes/auth/callback";
 import UsersPage from "./routes/users";
 import { AuthGuard } from "./components/AuthGuard";
 import routes from "tempo-routes";
@@ -15,6 +17,8 @@ function App() {
         <>
           <Routes>
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/auth/callback" element={<AuthCallback />} />
             <Route
               path="/"
               element={

@@ -6,9 +6,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/components/ui/use-toast";
+import { SocialAuthButtons } from "@/components/ui/social-auth-buttons";
 
 const LoginPage = () => {
-  const { signIn } = useAuth();
+  const { signIn, signInWithVK, signInWithYandex, signInWithGosuslugi } =
+    useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [email, setEmail] = useState("");
@@ -63,6 +65,24 @@ const LoginPage = () => {
           <Button type="submit" className="w-full" disabled={loading}>
             {loading ? "Вход..." : "Войти"}
           </Button>
+
+          <SocialAuthButtons
+            loading={loading}
+            onVkClick={signInWithVK}
+            onYandexClick={signInWithYandex}
+            onGosuslugiClick={signInWithGosuslugi}
+          />
+
+          <p className="text-sm text-center text-muted-foreground">
+            Нет аккаунта?{" "}
+            <Button
+              variant="link"
+              className="p-0"
+              onClick={() => navigate("/register")}
+            >
+              Зарегистрироваться
+            </Button>
+          </p>
         </form>
       </Card>
     </div>
