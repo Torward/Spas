@@ -67,7 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signInWithVK = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'vk',
+      provider: "vk",
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signInWithYandex = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'yandex',
+      provider: "yandex",
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
@@ -87,18 +87,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signInWithGosuslugi = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'gosuslugi',
+      provider: "gosuslugi",
       options: {
         redirectTo: `${window.location.origin}/auth/callback`,
       },
     });
-    if (error) throw error;
-  };
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
     if (error) throw error;
   };
 
