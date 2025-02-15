@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Avatar } from "./ui/avatar";
 import { Badge } from "./ui/badge";
+import ResourceAssignment from "./ResourceAssignment";
 import {
   Video,
   Mic,
@@ -15,6 +16,7 @@ import {
   Phone,
   PhoneOff,
   Send,
+  Users,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { WebRTCConnection } from "@/lib/webrtc";
@@ -131,6 +133,12 @@ const CommunicationHub = ({
   return (
     <Card className="w-[400px] h-[600px] bg-background border-border">
       <Tabs defaultValue="video" className="w-full h-full">
+        <TabsList className="w-full grid grid-cols-4">
+          <TabsTrigger value="video">Видео</TabsTrigger>
+          <TabsTrigger value="audio">Аудио</TabsTrigger>
+          <TabsTrigger value="messages">Сообщения</TabsTrigger>
+          <TabsTrigger value="resources">Ресурсы</TabsTrigger>
+        </TabsList>
         <TabsList className="w-full grid grid-cols-3">
           <TabsTrigger value="video">Видео</TabsTrigger>
           <TabsTrigger value="audio">Аудио</TabsTrigger>
@@ -266,6 +274,10 @@ const CommunicationHub = ({
               </form>
             </div>
           </div>
+        </TabsContent>
+
+        <TabsContent value="resources" className="h-[calc(100%-40px)]">
+          <ResourceAssignment emergencyId={emergencyId} />
         </TabsContent>
       </Tabs>
     </Card>
