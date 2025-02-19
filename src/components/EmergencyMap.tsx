@@ -35,6 +35,12 @@ interface HazardZone {
 }
 
 const EmergencyMap = () => {
+  const [customMarkers, setCustomMarkers] = useState<
+    Array<{ position: { lat: number; lng: number }; label?: string }>
+  >([]);
+  const [selectedPosition, setSelectedPosition] = useState<
+    { lat: number; lng: number } | undefined
+  >();
   const [locations, setLocations] = useState<Location[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<Location | null>(
     null,
@@ -201,15 +207,56 @@ const EmergencyMap = () => {
     setSelectedLocation(location);
   };
 
+  const handleAddMarker = (
+    location: { lat: number; lng: number },
+    label?: string,
+  ) => {
+    setCustomMarkers([...customMarkers, { position: location, label }]);
+  };
+
+  const handleSearchAddress = async (address: string) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`,
+      );
+      const data = await response.json();
+
+      if (data && data[0]) {
+        const { lat, lon } = data[0];
+        handleAddMarker(
+          { lat: parseFloat(lat), lng: parseFloat(lon) },
+          address,
+        );
+      }
+    } catch (error) {
+      console.error("Error searching address:", error);
+    }
+  };
+
   return (
     <Card className="relative overflow-hidden">
+      <div className="absolute top-4 left-4 z-10 space-y-2">
+        <MapMarkerControl
+          onAddMarker={handleAddMarker}
+          onSearchAddress={handleSearchAddress}
+        />
+        <HazardZoneControl
+          selectedPosition={selectedPosition}
+          onHazardZoneCreated={() => {
+            setSelectedPosition(undefined);
+            loadHazardZones();
+          }}
+        />
+      </div>
       <RealMapView
         locations={locations}
         hazardZones={hazardZones}
         weatherData={showWeatherOverlay ? weatherData : null}
         onMarkerClick={handleMarkerClick}
+        onMapClick={(latlng) => setSelectedPosition(latlng)}
         center={{ lat: 55.7558, lng: 37.6173 }} // Moscow center by default
         zoom={11}
+        customMarkers={customMarkers}
       />
       <div className="absolute top-4 right-4 z-10 space-y-2">
         <Button

@@ -51,11 +51,18 @@ interface RealMapViewProps {
   hazardZones?: HazardZone[];
   weatherData?: WeatherData | null;
   onMarkerClick?: (location: Location) => void;
+  onMapClick?: (latlng: { lat: number; lng: number }) => void;
   center?: { lat: number; lng: number };
   zoom?: number;
+  customMarkers?: Array<{
+    position: { lat: number; lng: number };
+    label?: string;
+  }>;
 }
 
 const RealMapView: React.FC<RealMapViewProps> = ({
+  customMarkers = [],
+  onMapClick,
   locations = [],
   hazardZones = [],
   weatherData = null,
@@ -82,6 +89,13 @@ const RealMapView: React.FC<RealMapViewProps> = ({
   useEffect(() => {
     if (!mapRef.current) {
       mapRef.current = L.map("map").setView([center.lat, center.lng], zoom);
+
+      // Add click handler
+      if (onMapClick) {
+        mapRef.current.on("click", (e: L.LeafletMouseEvent) => {
+          onMapClick({ lat: e.latlng.lat, lng: e.latlng.lng });
+        });
+      }
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: "© OpenStreetMap contributors",
@@ -182,9 +196,44 @@ const RealMapView: React.FC<RealMapViewProps> = ({
       }
     });
 
+    // Add custom markers
+    customMarkers.forEach((marker, index) => {
+      const markerId = `custom-${index}`;
+      if (!markersRef.current[markerId]) {
+        const icon = L.divIcon({
+          className: "custom-marker",
+          html: `
+            <div class="p-2 rounded-full bg-blue-500/20">
+              <div class="text-blue-500">
+                <svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><path d='M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z'/><circle cx='12' cy='10' r='3'/></svg>
+              </div>
+            </div>
+            ${marker.label ? `<div class="text-sm font-medium bg-white px-2 py-1 rounded shadow">${marker.label}</div>` : ""}
+          `,
+          iconSize: [40, 40],
+          iconAnchor: [20, 40],
+        });
+
+        const markerInstance = L.marker(
+          [marker.position.lat, marker.position.lng],
+          { icon },
+        ).addTo(mapRef.current!);
+
+        markersRef.current[markerId] = markerInstance;
+      } else {
+        markersRef.current[markerId].setLatLng([
+          marker.position.lat,
+          marker.position.lng,
+        ]);
+      }
+    });
+
     // Remove old markers
     Object.keys(markersRef.current).forEach((id) => {
-      if (!locations.find((loc) => loc.id === id)) {
+      if (
+        !locations.find((loc) => loc.id === id) &&
+        !customMarkers.find((_, index) => `custom-${index}` === id)
+      ) {
         markersRef.current[id].remove();
         delete markersRef.current[id];
       }
