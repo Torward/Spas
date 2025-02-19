@@ -451,7 +451,7 @@ export class MobileAPI {
     const validation = await this.validateToken(token);
     if (!validation?.is_valid) throw new Error("Invalid token");
 
-    let query = supabase.from("resources").select("*, resource_metrics(*))");
+    let query = supabase.from("resources").select("*, resource_metrics(*)");
 
     if (resourceType) {
       query = query.eq("type", resourceType);
